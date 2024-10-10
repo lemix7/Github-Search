@@ -23,10 +23,10 @@ const Search = ({ children }) => {
     setLoading(true);
     setUserClicked(true);
 
-    setTimeout(() => {
-      setUserClicked(false);
-      setLoading(false); // You might want to reset loading as well after the click
-    }, 3000);
+    // setTimeout(() => { // this will reset the loading state
+    //   setUserClicked(false);
+    //   setLoading(false); 
+    // }, 3000);
   }
 
   console.log(username);
@@ -57,7 +57,7 @@ const Search = ({ children }) => {
   return (
     <userContext.Provider value={{ userData, isFound, error , loading }}>
       <div
-        className="w-full h-[250px] flex flex-col items-center pt-10"
+        className="w-full h-[250px] flex-shrink-0 flex flex-col items-center pt-10"
         style={{
           backgroundImage: `url(${HeroImage})`,
           backgroundPosition: "center",
