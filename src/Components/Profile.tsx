@@ -5,7 +5,10 @@ import { useContext , useState , useEffect } from "react"
 
 
 const Profile = () => {
-  const {userData ,loading} = useContext(userContext)
+  const {userData, loading} = useContext(userContext) as {
+    userData: {followers:string; following:string ; location:string ; avatar_url: string} | null;
+    loading: boolean;
+  }
 
   const [followers, setFollowers] = useState('');
   const [following, setFollowing] = useState('');

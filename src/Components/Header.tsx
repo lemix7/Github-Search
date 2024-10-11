@@ -2,7 +2,10 @@ import { userContext } from "./Search"
 import { useContext , useEffect , useState} from "react"
 
 const Header = () => {
-  const {userData ,loading} = useContext(userContext)
+  const {userData, loading} = useContext(userContext) as {
+    userData: {name: string; bio:string} | null;
+    loading: boolean;
+  }
 
   const [username, setUsername] = useState("");
   const [userDescription, setUserDescription] = useState("");
