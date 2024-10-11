@@ -1,39 +1,51 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, ReactNode } from "react";
 import HeroImage from "../Assets/hero-image.png";
 import SearchIcon from "../Assets/Search.svg";
 import UserResult from "./UserResult";
 
-export const userContext = createContext({});
+// Define the context type
+interface UserContextType {
+  userData: any;
+  isFound: boolean;
+  error: string;
+  loading: boolean;
+}
 
-const Search = ({ children }) => {
-  const [isFound, setIsFound] = useState(false);
-  const [username, setUsername] = useState("");
-  const [userData, setUserData] = useState({});
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const[userClicked, setUserClicked] = useState(false);
+// Define the props for the Search component
+interface SearchProps {
+  children: ReactNode;
+}
 
-  const handleSearch = (e) => {
+// Initialize the userContext with an empty object and define its type
+export const userContext = createContext<UserContextType | null>(null);
+
+const Search = ({ children }: SearchProps) => {
+  const [isFound, setIsFound] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [userData, setUserData] = useState<any>({});
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userClicked, setUserClicked] = useState<boolean>(false);
+
+  // Define event type for handleSearch (from the input)
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
-      setUsername((u) => (u = e.target.value));
+      setUsername(e.target.value);
     }, 2000);
     setUserClicked(false);
-    setLoading(false); 
+    setLoading(false);
   };
 
   const handleLoading = () => {
     setLoading(true);
     setUserClicked(true);
-  }
-
-  console.log(username);
+  };
 
   useEffect(() => {
     async function fetchData(user: string) {
       try {
         const response = await fetch(`https://api.github.com/users/${user}`);
         const data = await response.json();
-        console.log(data);
         if (data.message === "Not Found") {
           setIsFound(false);
         } else {
@@ -41,18 +53,16 @@ const Search = ({ children }) => {
           setUserData(data);
         }
       } catch (err: any) {
-        setError(err);
+        setError(err.message);
       }
     }
     if (username) {
       fetchData(username);
     }
-
-    console.log(userData);
   }, [username]);
 
   return (
-    <userContext.Provider value={{ userData, isFound, error , loading }}>
+    <userContext.Provider value={{ userData, isFound, error, loading }}>
       <div
         className="w-full h-[250px] flex-shrink-0 flex flex-col items-center pt-10"
         style={{
@@ -74,18 +84,15 @@ const Search = ({ children }) => {
           />
         </div>
 
-        {isFound  && !userClicked && (
-           <UserResult
-           userPfp={userData.avatar_url}
-           repoName={userData.name}
-           repoDescription={userData.bio}
+        {isFound && !userClicked && (
+          <UserResult
+            userPfp={userData.avatar_url}
+            repoName={userData.name}
+            repoDescription={userData.bio}
             onClick={handleLoading}
-         />
+          />
         )}
-      
       </div>
-
-       
 
       {children}
     </userContext.Provider>

@@ -2,17 +2,24 @@ import Repo from "./Repo"
 import { userContext } from "./Search"
 import { useContext, useEffect , useState } from "react"
 
+
+
 const Repos = () => {
-  const {userData, loading} = useContext(userContext)
+  const {userData, loading} = useContext(userContext) as {
+    userData: {login: string} | null;
+    loading: boolean;
+  }
   const [repos, setRepos] = useState([])
   const [viewAll, setViewAll] = useState(false)
 
 
   useEffect(()=> {
     const fetchData = async () => {
-      const response = await fetch(`https://api.github.com/users/${userData.login}/repos`);
-      const data = await response.json();
-      setRepos(data);
+      if(userData && userData.login){
+        const response = await fetch(`https://api.github.com/users/${userData.login}/repos`);
+        const data = await response.json();
+        setRepos(data);
+      }
     }
     if (loading && userData) {
       fetchData();
@@ -34,7 +41,7 @@ const Repos = () => {
           // calculate the days passed since the last update
         const updatedDate = new Date(repo.updated_at)
           const currentDate = new Date()
-          const differenceInMilliseconds  = currentDate - updatedDate
+          const differenceInMilliseconds  = currentDate.getTime() - updatedDate.getTime()
           const millisecondsPerDay = 1000 * 60 * 60 * 24
           const daysPassed = Math.floor(differenceInMilliseconds / millisecondsPerDay)
 
@@ -49,7 +56,7 @@ const Repos = () => {
         {viewAll && repos.slice(4).map((repo:any) => {
           const updatedDate = new Date(repo.updated_at)
           const currentDate = new Date()
-          const differenceInMilliseconds  = currentDate - updatedDate
+          const differenceInMilliseconds  = currentDate.getTime() - updatedDate.getTime()
           const millisecondsPerDay = 1000 * 60 * 60 * 24
           const daysPassed = Math.floor(differenceInMilliseconds / millisecondsPerDay)
 
