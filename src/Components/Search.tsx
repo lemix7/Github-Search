@@ -17,16 +17,13 @@ const Search = ({ children }) => {
     setTimeout(() => {
       setUsername((u) => (u = e.target.value));
     }, 2000);
+    setUserClicked(false);
+    setLoading(false); 
   };
 
   const handleLoading = () => {
     setLoading(true);
     setUserClicked(true);
-
-    // setTimeout(() => { // this will reset the loading state
-    //   setUserClicked(false);
-    //   setLoading(false); 
-    // }, 3000);
   }
 
   console.log(username);

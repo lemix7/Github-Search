@@ -8,7 +8,7 @@ function App() {
 
 
   return (
-    <div className="vietnam w-full h-screen flex-shrink-0 bg-Background pb-8 md:flex flex-col items-center">
+    <div className="vietnam w-full min-h-screen flex-shrink-0 bg-Background pb-8 md:flex flex-col items-center">
 
       <Search> {/* user context provider */}
 
